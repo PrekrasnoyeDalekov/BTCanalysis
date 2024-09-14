@@ -3,8 +3,6 @@ import urllib.request
 import re
 import time
 import random
-import csv
-import json
 import os
 import sys
 
@@ -37,7 +35,7 @@ def addr_collection(company):
     alter_path = os.path.join(root_path, company)
     if not os.path.exists(alter_path):
         os.makedirs(alter_path)
-    for _ in range(all_page // 10):
+    for _ in range(all_page // 100):
         #     将csv文件下载到本地
         try:
             download_url = 'https://www.walletexplorer.com/wallet/' + company + '/addresses?page=' + str(
@@ -53,6 +51,6 @@ def addr_collection(company):
 
 
 if __name__ == '__main__':
-    com_list = ['CloudBet.com']
+    com_list = ['CoinGaming.io']
     for company in com_list:
         addr_collection(company)
