@@ -14,7 +14,7 @@ raw_addr_url = "https://blockchain.info/rawaddr/"
 
 
 def get_response(url):
-    time.sleep(random.uniform(2.5, 4.0))
+    time.sleep(random.uniform(2.0, 3.0))
     response = requests.get(url, headers=head)
     response.encoding = "utf-8"
     status = response.status_code
@@ -57,7 +57,7 @@ def near_neighbor(k, addr, _txhash=""):
         traceback.print_exc()
         pass
     else:
-        with open(os.path.join("D:/node_addr/", str(k) + ".csv"), "a", encoding="utf-8") as file:
+        with open(os.path.join("D:/node_addr/", str(k) + ".csv"), "a", encoding="utf-8", newline='') as file:
             writer = csv.writer(file)
             for row in addr_txhash.items():
                 writer.writerow(row)
@@ -69,13 +69,14 @@ def near_neighbor(k, addr, _txhash=""):
                 下一次查询，把此次txhash排除
 '''
 
-file_path = 'D:/raw_addr_csv/CloudBet.com'
+file_path = 'D:/raw_addr_csv/CoinGaming.io'
 file_list = os.listdir(file_path)
 if __name__ == "__main__":
     if not os.path.exists('D:/node_addr'):
         os.makedirs('D:/node_addr')
     # 第一级
     for files in file_list:
+        print("打开文件{}".format(files))
         with open(os.path.join(file_path, files)) as f1:
             df = pd.read_csv(f1, skiprows=1)
             for addr in df["address"]:
