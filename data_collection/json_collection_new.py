@@ -14,8 +14,8 @@ raw_addr_url = "https://blockchain.info/rawaddr/"
 
 
 def get_response(url):
-    time.sleep(random.uniform(2.0, 3.0))
-    response = requests.get(url, headers=head)
+    time.sleep(random.uniform(2.5, 3.5))
+    response = requests.get(url, headers=head,verify=False)
     response.encoding = "utf-8"
     status = response.status_code
     if status == 200:
@@ -75,11 +75,11 @@ if __name__ == "__main__":
     if not os.path.exists('D:/node_addr'):
         os.makedirs('D:/node_addr')
     # 第一级
-    for files in file_list:
+    for files in file_list[1:]:
         print("打开文件{}".format(files))
         with open(os.path.join(file_path, files)) as f1:
             df = pd.read_csv(f1, skiprows=1)
-            for addr in df["address"]:
+            for addr in df["address"][7:]:
                 near_neighbor(1,addr)
 
     # # 第二级
