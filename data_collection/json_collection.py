@@ -47,8 +47,8 @@ def get_json_by_addr(addr):
         get_json_by_addr(addr)
 
 
-def near_neighbor(k, addr, _txhash=""):
-    addr_json_data = get_json_by_addr(addr, k)
+def near_neighbor(addr, _txhash=""):
+    addr_json_data = get_json_by_addr(addr)
     addr_txhash = dict()
     try:
         for tx in addr_json_data["data"][0]["txs"]:
@@ -64,10 +64,9 @@ def near_neighbor(k, addr, _txhash=""):
         traceback.print_exc()
         pass
     else:
-        with open(os.path.join("D:/node_addr/", str(k) + ".csv"), "a", encoding="utf-8", newline='') as file:
-            writer = csv.writer(file)
-            for row in addr_txhash.items():
-                writer.writerow(row)
+        writer = csv.writer(node_addr_file)
+        for row in addr_txhash.items():
+            writer.writerow(row)
 
 
 '''                
@@ -96,41 +95,47 @@ if __name__ == "__main__":
         _dir = os.path.join(root_path, "k=2")
         if not os.path.exists(_dir):
             os.makedirs(_dir)
+        node_addr_file = open(os.path.join("D:/node_addr/", "2.csv"), "a", encoding="utf-8", newline='')
         for addr_txhash in addr_txhash_list:
             addr,txhash = addr_txhash.strip().split(",")
             filename = os.path.join(_dir, "%s.json" % addr)
             if not os.path.exists(filename):   # 避免重复查询影响效率
                 print("index = {}".format(addr_txhash_list.index(addr_txhash)))
-                near_neighbor(2,addr,txhash)
+                near_neighbor(addr,txhash)
             else:
                 print("{}已经存在".format(addr_txhash_list.index(addr_txhash)))
+        node_addr_file.close()
     #
     # # 第三级
-    # with open("D:/node_addr/1.csv","r") as f3:
+    # with open("D:/node_addr/2.csv","r") as f3:
     #     addr_txhash_list = f3.readlines()
     #     _dir = os.path.join(root_path, "k=3")
     #     if not os.path.exists(_dir):
     #         os.makedirs(_dir)
+    #     node_addr_file = open(os.path.join("D:/node_addr/", "3.csv"), "a", encoding="utf-8", newline='')
     #     for addr_txhash in addr_txhash_list:
     #         addr,txhash = addr_txhash.strip().split(",")
     #         filename = os.path.join(_dir, "%s.json" % addr)
-    #         if not os.path.exists(filename):
+    #         if not os.path.exists(filename):   # 避免重复查询影响效率
     #             print("index = {}".format(addr_txhash_list.index(addr_txhash)))
-    #             near_neighbor(3,addr,txhash)
+    #             near_neighbor(addr,txhash)
     #         else:
     #             print("{}已经存在".format(addr_txhash_list.index(addr_txhash)))
+    #     node_addr_file.close()
 
     # # 第四级
-    # with open("D:/node_addr/1.csv","r") as f4:
+    # with open("D:/node_addr/3.csv","r") as f4:
     #     addr_txhash_list = f4.readlines()
     #     _dir = os.path.join(root_path, "k=4")
     #     if not os.path.exists(_dir):
     #         os.makedirs(_dir)
+    #     node_addr_file = open(os.path.join("D:/node_addr/", "4.csv"), "a", encoding="utf-8", newline='')
     #     for addr_txhash in addr_txhash_list:
     #         addr,txhash = addr_txhash.strip().split(",")
     #         filename = os.path.join(_dir, "%s.json" % addr)
-    #         if not os.path.exists(filename):
+    #         if not os.path.exists(filename):   # 避免重复查询影响效率
     #             print("index = {}".format(addr_txhash_list.index(addr_txhash)))
-    #             near_neighbor(4,addr,txhash)
+    #             near_neighbor(addr,txhash)
     #         else:
     #             print("{}已经存在".format(addr_txhash_list.index(addr_txhash)))
+    #     node_addr_file.close()
