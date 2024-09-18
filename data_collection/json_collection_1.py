@@ -87,21 +87,21 @@ if __name__ == "__main__":
     if not os.path.exists(_dir):
         os.makedirs(_dir)
     # 第一级
-    node_addr_file = open(os.path.join("D:/node_addr/", "1-1.csv"), "a", encoding="utf-8", newline='')
-    for files in file_list:
-        print("打开文件{0},index = {1}".format(files,file_list.index(files)))
-        with open(os.path.join(file_path, files)) as f1:
-            df = pd.read_csv(f1, skiprows=1)
-            count = 0
-            for addr in df["address"]:
-                filename = os.path.join(_dir, "%s.json" % addr)
-                if not os.path.exists(filename):
-                    print("index = {}".format(count))
-                    near_neighbor(addr)
-                else:
-                    print("index = {}已经存在".format(count))
-                count += 1
-    node_addr_file.close()
+    # node_addr_file = open(os.path.join("D:/node_addr/", "1-1.csv"), "a", encoding="utf-8", newline='')
+    # for files in file_list:
+    #     print("打开文件{0},index = {1}".format(files,file_list.index(files)))
+    #     with open(os.path.join(file_path, files)) as f1:
+    #         df = pd.read_csv(f1, skiprows=1)
+    #         count = 0
+    #         for addr in df["address"]:
+    #             filename = os.path.join(_dir, "%s.json" % addr)
+    #             if not os.path.exists(filename):
+    #                 print("index = {}".format(count))
+    #                 near_neighbor(addr)
+    #             else:
+    #                 print("index = {}已经存在".format(count))
+    #             count += 1
+    # node_addr_file.close()
 
     # 第二级
     with open("D:/node_addr/1-1.csv","r") as f2:
@@ -111,9 +111,11 @@ if __name__ == "__main__":
             os.makedirs(_dir)
         node_addr_file = open(os.path.join("D:/node_addr/", "2-1.csv"), "a", encoding="utf-8", newline='')
         count = 0
-        for addr_txhash in addr_txhash_list:
+        for addr_txhash in addr_txhash_list[6034:]:
             addr,txhash = addr_txhash.strip().split(",")
             filename = os.path.join(_dir, "%s.json" % addr)
+            if count//500 == 0:  # 每500次刷新缓冲区
+                node_addr_file.flush()
             if not os.path.exists(filename):   # 避免重复查询影响效率
                 print("index = {}".format(count))
                 near_neighbor(addr,txhash)
@@ -132,7 +134,9 @@ if __name__ == "__main__":
     #     for addr_txhash in addr_txhash_list:
     #         addr,txhash = addr_txhash.strip().split(",")
     #         filename = os.path.join(_dir, "%s.json" % addr)
-    #         if not os.path.exists(filename):   # 避免重复查询影响效率
+    #             if count // 1000 == 0:  # 每1000次刷新缓冲区
+    #                 node_addr_file.flush()
+            # if not os.path.exists(filename):   # 避免重复查询影响效率
     #             print("index = {}".format(addr_txhash_list.index(addr_txhash)))
     #             near_neighbor(addr,txhash)
     #         else:
@@ -149,6 +153,8 @@ if __name__ == "__main__":
     #     for addr_txhash in addr_txhash_list:
     #         addr,txhash = addr_txhash.strip().split(",")
     #         filename = os.path.join(_dir, "%s.json" % addr)
+    #         if count // 1000 == 0:  # 每1000次刷新缓冲区
+    #              node_addr_file.flush()
     #         if not os.path.exists(filename):   # 避免重复查询影响效率
     #             print("index = {}".format(addr_txhash_list.index(addr_txhash)))
     #             near_neighbor(addr,txhash)
