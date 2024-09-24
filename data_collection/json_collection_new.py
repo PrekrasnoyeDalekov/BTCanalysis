@@ -19,7 +19,7 @@ tail = "/1/50?apikey=BTCxTvlBqH16IKBOBv3N"
 async def get_response(url):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=head) as response:
+            async with session.get(url, headers=head,timeout=aiohttp.ClientTimeout(connect=10)) as response:
                 response.encoding = "utf-8"
                 status = response.status
                 if status == 200:
@@ -103,6 +103,11 @@ async def main3(addr_tx_tuple_list):
     tasks = [near_neighbor(addr_tx_tuple[0],addr_tx_tuple[1]) for addr_tx_tuple in [x.strip().split(",") for x in addr_tx_tuple_list] if not is_file_exist(addr_tx_tuple[0],_dir)]
     await asyncio.gather(*tasks)
 
+async def main4(addr_tx_tuple_list):
+    _dir = os.path.join(root_path, "k=4")
+    tasks = [near_neighbor(addr_tx_tuple[0],addr_tx_tuple[1]) for addr_tx_tuple in [x.strip().split(",") for x in addr_tx_tuple_list] if not is_file_exist(addr_tx_tuple[0],_dir)]
+    await asyncio.gather(*tasks)
+
 if __name__ == "__main__":
     if not os.path.exists('D:/node_addr'):
         os.makedirs('D:/node_addr')
@@ -148,35 +153,30 @@ if __name__ == "__main__":
     #     node_addr_file.close()
     #
     # # 第三级
-    with open("D:/node_addr/2-1.csv","r") as f3:
-        addr_txhash_list = f3.readlines()
-        _dir = os.path.join(root_path, "k=3")
-        if not os.path.exists(_dir):
-            os.makedirs(_dir)
-        node_addr_file = open(os.path.join("D:/node_addr/", "3-1.csv"), "a", encoding="utf-8", newline='')
-        for i in range(18,(len(addr_txhash_list)//100)-1):
-            asyncio.run(main3(addr_txhash_list[i*100:(i+1)*100]))
-            print(i*100,"-",(i+1)*100)
-            node_addr_file.close()
-            node_addr_file = open(os.path.join("D:/node_addr/", "3-1.csv"), "a", encoding="utf-8", newline='')
-        node_addr_file.close()
+    # with open("D:/node_addr/2-1.csv","r") as f3:
+    #     addr_txhash_list = f3.readlines()
+    #     _dir = os.path.join(root_path, "k=3")
+    #     if not os.path.exists(_dir):
+    #         os.makedirs(_dir)
+    #     node_addr_file = open(os.path.join("D:/node_addr/", "3-1.csv"), "a", encoding="utf-8", newline='')
+    #     for i in range(1248,(len(addr_txhash_list)//100)-1):    # 2024.9.22:124700-124800
+    #         asyncio.run(main3(addr_txhash_list[i*100:(i+1)*100]))
+    #         print(i*100,"-",(i+1)*100)
+    #         node_addr_file.close()
+    #         node_addr_file = open(os.path.join("D:/node_addr/", "3-1.csv"), "a", encoding="utf-8", newline='')
+    #     node_addr_file.close()
 
 
     # # 第四级
-    # with open("D:/node_addr/3-1.csv","r") as f4:
-    #     addr_txhash_list = f4.readlines()
-    #     _dir = os.path.join(root_path, "k=4")
-    #     if not os.path.exists(_dir):
-    #         os.makedirs(_dir)
-    #     node_addr_file = open(os.path.join("D:/node_addr/", "4-1.csv"), "a", encoding="utf-8", newline='')
-    #     for addr_txhash in addr_txhash_list:
-    #         addr,txhash = addr_txhash.strip().split(",")
-    #         filename = os.path.join(_dir, "%s.json" % addr)
-    #         if count // 1000 == 0:  # 每1000次刷新缓冲区
-    #              node_addr_file.flush()
-    #         if not os.path.exists(filename):   # 避免重复查询影响效率
-    #             print("index = {}".format(addr_txhash_list.index(addr_txhash)))
-    #             near_neighbor(addr,txhash)
-    #         else:
-    #             print("{}已经存在".format(addr_txhash_list.index(addr_txhash)))
-    #     node_addr_file.close()
+    with open("D:/node_addr/3-1.csv","r") as f3:
+        addr_txhash_list = f3.readlines()
+        _dir = os.path.join(root_path, "k=4")
+        if not os.path.exists(_dir):
+            os.makedirs(_dir)
+        node_addr_file = open(os.path.join("D:/node_addr/", "4-1.csv"), "a", encoding="utf-8", newline='')
+        for i in range((len(addr_txhash_list)//100)-1):
+            asyncio.run(main4(addr_txhash_list[i*100:(i+1)*100]))
+            print(i*100,"-",(i+1)*100,"Finished")
+            node_addr_file.close()
+            node_addr_file = open(os.path.join("D:/node_addr/", "4-1.csv"), "a", encoding="utf-8", newline='')
+        node_addr_file.close()
